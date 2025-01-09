@@ -150,6 +150,7 @@ show_rows() {
 
 setup() {
     show_rows
+    [ ! -d $HOME/.termux ] && mkdir $HOME/.termux
     read -p "Enter default key for TMUX (CTRL b)? " tmux_key
     tmux_key="${tmux_key:-CTRL b}"
     generate "$tmux_key"

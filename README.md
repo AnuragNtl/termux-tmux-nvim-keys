@@ -9,7 +9,7 @@ This tool can help configure termux to run shell scripts, execute vim and termux
 ## Installation
 
 ```
-cd ~ && pkg update && pkg install git && git clone https://github.com/anuragntl/termux-tmux-nvim-keys && ./termux-nvim-keys/setup
+cd ~ && pkg update && pkg install -y git && git clone https://github.com/anuragntl/termux-tmux-nvim-keys && ./termux-tmux-nvim-keys/setup
 ```
 
 ## Configuration
