@@ -1,0 +1,24 @@
+#!/bin/bash
+
+dir="$(dirname "$0")"
+
+. "$dir/../common.sh"
+scripts=$(ls "$dir" | grep -v '^default$')
+
+if [ -z "$scripts" ]
+then
+    echoinfo "Add a script/executable in the $dir to run custom commands from this key."
+    read
+    exit
+fi
+
+install_pkg fzf fzf "(required)"
+
+script=$(echo $scripts | fzf)
+if [ -z "$script" ]
+then
+    exit 1
+fi
+
+. "$dir/$script"
+
