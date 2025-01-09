@@ -12,7 +12,7 @@ then
     exit
 fi
 
-install_pkg fzf fzf "(required)"
+install_pkg fzf fzf "required"
 
 script=$(echo $scripts | fzf)
 if [ -z "$script" ]

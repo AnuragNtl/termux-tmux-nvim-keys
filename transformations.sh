@@ -14,7 +14,7 @@ tr_tmux_command() {
 }
 
 tr_single_key() {
-    if echo $1 | grep '^\{' > /dev/null
+    if echo $1 | grep '^{' > /dev/null
     then
         echo "$1"
     else

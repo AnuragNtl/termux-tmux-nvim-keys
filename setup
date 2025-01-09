@@ -7,8 +7,9 @@ export SCRIPT_DIR="$BASE_DIR/scripts"
 . $BASE_DIR/transformations.sh
 . $BASE_DIR/common.sh
 
-PROPERTIES_FILE=termux.properties
+PROPERTIES_FILE=$HOME/termux.properties
 
+install_pkg which which "required"
 install_pkg jq jq "required"
 
 validate_config() {
@@ -124,6 +125,8 @@ generate() {
     echosuccess "Generating extra keys" && \
     gather_other_properties > "$PROPERTIES_FILE.tmp" && \
     generate_extra_keys "$1" >> "$PROPERTIES_FILE.tmp" && \
+    cp "$PROPERTIES_FILE.tmp" "$PROPERTIES_FILE" && \
+    rm "$PROPERTIES_FILE.tmp" && \
     echosuccess "Successfully generated extra keys" && \
     echosuccess "Reloading settings" && \
     termux-reload-settings
@@ -132,9 +135,10 @@ generate() {
 
     if [ $exit_code -ne 0 ]
     then
-        install_pkg tmux tmux
-        install_pkg neovim nvim
-        exit 1
+        install_pkg neovim nvim && \
+        install_pkg tmux tmux "required" && \
+        echoinfo "Would you like to launch tmux to give these keys a try?" && \
+        tmux
     fi
     read
 }

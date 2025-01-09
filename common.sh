@@ -7,10 +7,14 @@ install_pkg() {
     then
         return
     fi
-    read -p "$2 $3 is not detected. would you like to install it? (Y)/n" choice
+    read -p "$2 ($3) is not detected. would you like to install it? (Y)/n" choice
     choice="${choice:-y}"
     if [ ! "$choice" = "y" ] && [ ! "$choice" = "Y" ]
     then
+        if [ "$3" = "required" ]
+        then
+            exit 1
+        fi
         return
     fi
     if [ $UPDATED -eq 0]
