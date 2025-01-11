@@ -6,7 +6,8 @@ This is a simple script which installs and helps easily configure vim and tmux m
 [output.webm](https://github.com/user-attachments/assets/317e0371-903b-4059-abb4-be3f81023ebe)
 
 
-It can be used to increase productivity for users of vim and tmux in termux, which use on keyboard combinations and command-modes to interact with.
+It can be used to increase productivity for users of vim and tmux in termux. Vim and tmux use keyboard combinations and command-modes to interact with. These combinations are not as fast in a touch-based keyboard of a handheld device, as they are in an actual keyboard.
+
 This tool can help configure termux to run shell scripts, execute vim and termux combinations etc, all with the help of a single touch of extra keys.
 
 ## Installation
