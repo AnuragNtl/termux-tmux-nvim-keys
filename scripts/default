@@ -3,7 +3,7 @@
 dir="$(dirname "$0")"
 
 . "$dir/../common.sh"
-scripts=$(echo "$dir"/* | grep -v '^default$')
+scripts=$(echo "$dir"/* | grep -v 'default$')
 
 if [ -z "$scripts" ]
 then
@@ -20,5 +20,6 @@ then
     exit 1
 fi
 
-. "$dir/$script"
+$script
+
 
