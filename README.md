@@ -22,7 +22,7 @@ Edit the `keyboard_layout.sh` script for configuring the keys.
 
 For example:
 
-* Add a key which writes the current buffer in vim:
+* Add a key which writes the current buffer in vim (and does runs a `:wa` on swiping up the key)
 
 ```
 keyboard['vim_write']='{"display":":w", "macro": ":w\n", "popup": {"display": ":wa", "macro": ":wa"}}'
@@ -34,10 +34,12 @@ For reference, termux keys configuration : [Touch Keyboard](https://wiki.termux.
 keyboard_rows['row1']='TAB vim_write vim_switch_tab tmux_fullscreen ... ...'
 ```
 
-* Finally, register the keyboard rows (leftmost row in this config would become the topmost row) - 
+* Register the keyboard rows (leftmost row in this config would become the topmost row) - 
 
 ```
 export rows='row1 row2 row3'
 
 ```
+
+* Finally, run `./setup` to reinstall the keys.
 
