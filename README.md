@@ -27,9 +27,13 @@ For example:
 ```
 keyboard['vim_write']='{"display":":w", "macro": ":w\n", "popup": {"display": ":wa", "macro": ":wa"}}'
 ```
+Or, add a macro for TMUX, for example TMUX toggle fullscreen:
+```
+keyboard['tmux_fullscreen']=' {"macro":"TMUX_PREFIX z","display":"T°"} '
+```
 _For reference, termux keys configuration : [Touch Keyboard](https://wiki.termux.com/wiki/Touch_Keyboard)._
 
-2. Then, add the key to one of the keyboard rows (keys are added left-to right)
+2. Then, add the key to one of the keyboard rows (keys are added left-to right, in the same order they appear)
 ```
 keyboard_rows['row1']='TAB vim_write vim_switch_tab tmux_fullscreen ... ...'
 ```
