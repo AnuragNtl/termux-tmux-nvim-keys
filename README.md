@@ -29,3 +29,15 @@ keyboard['vim_write']='{"display":":w", "macro": ":w\n", "popup": {"display": ":
 ```
 For reference, termux keys configuration : [Touch Keyboard](https://wiki.termux.com/wiki/Touch_Keyboard)
 
+* Then, add the key to one of the keyboard rows (keys are added left-to right)
+```
+keyboard_rows['row1']='TAB vim_write vim_switch_tab tmux_fullscreen ... ...'
+```
+
+* Finally, register the keyboard rows (leftmost row in this config would become the topmost row) - 
+
+```
+export rows='row1 row2 row3'
+
+```
+
