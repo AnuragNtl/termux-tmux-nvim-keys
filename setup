@@ -1,0 +1,158 @@
+#!/bin/bash
+
+BASE_DIR=$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )
+export BASE_DIR
+export SCRIPT_DIR="$BASE_DIR/scripts"
+
+. "$BASE_DIR/keyboard_layout.sh"
+. "$BASE_DIR/transformations.sh"
+. "$BASE_DIR/common.sh"
+
+PROPERTIES_FILE=$HOME/.termux/termux.properties
+
+install_pkg jq jq "required"
+
+validate_config() {
+    for row in $rows
+    do
+        if [ -z "${keyboard_rows[$row]}" ]
+        then
+            echoerr "The row \"$row\" not found"
+            echoerr "The keyboard row needs to be registered as keyboard_rows['$row']='...' in keyboard_layout.sh"
+            exit 1
+        fi
+        for item in ${keyboard_rows[$row]}
+        do
+            key="${keyboard[$item]}"
+            if [ -n "$key" ]
+            then
+                if ! echo "$key" | jq -re '""' > /dev/null
+                then
+                    echoerr "$key"
+                    echoerr "Cannot create Key $item (Invalid JSON)"
+                    echoerr "$key"
+                    exit 1
+                fi
+            fi
+        done
+    done
+}
+
+append_array() {
+    printf "%s" "$1" | jq ".[. | length] |= $2"
+}
+
+generate_extra_keys() {
+    tmux_prefix="$1"
+    generated_rows="[]"
+    for row in $rows
+    do
+        keys="[]"
+        for item in ${keyboard_rows[$row]}
+        do
+            key="${keyboard[$item]}"
+            if [ -z "$key" ]
+            then
+                key="$item"
+            fi
+            for tr in $transforms
+            do
+                key=$($tr "$key" "$tmux_prefix")
+            done
+            updated=$(append_array "$keys" "$key")
+            if [ -n "$updated" ]
+            then
+                keys=$updated
+            fi
+        done
+        generated=$(append_array "$generated_rows" "$keys")
+        generated_rows="$generated"
+    done
+    printf "extra-keys = %s\n" "$(printf "%s" "$generated_rows" | jq -c .)"
+}
+
+gather_other_properties() {
+    if [ ! -e "$PROPERTIES_FILE" ]
+    then 
+        return 
+    fi
+    
+    reading_multiline_property=0
+    property_started_prev_line=0
+    while IFS= read -r line
+    do
+        if [ $reading_multiline_property -eq 1 ]
+        then
+            if echo "$line" | grep '\\ *$' > /dev/null
+            then
+                property_started_prev_line=0
+                continue
+            elif [ $property_started_prev_line -eq 1 ]
+            then
+                property_started_prev_line=0
+                reading_multiline_property=0
+            else
+                reading_multiline_property=0
+                continue
+            fi
+        fi
+        if echo "$line" | grep "extra-keys" > /dev/null
+        then
+            reading_multiline_property=1
+            property_started_prev_line=1
+            continue
+        fi
+        echo "$line"
+    done < "$PROPERTIES_FILE"
+}
+
+demo() {
+    read -r -p "Would you like to launch tmux and vi to give these keys a try? (Y)/n " choice
+    choice="${choice:-y}"
+    if [ "$choice" = "Y" ] || [ "$choice" = "y" ]
+    then
+        install_pkg tmux tmux "required"
+        install_pkg vim vim "required"
+        tmux new-session -d -s "tmux-nvim-demo" "vim" && \
+        tmux a -t 'tmux-nvim-demo'
+    fi
+}
+
+generate() {
+    [ ! -e "$PROPERTIES_FILE" ] && touch "$PROPERTIES_FILE"
+    cp "$PROPERTIES_FILE" "$PROPERTIES_FILE.bak" && \
+    echosuccess "Backed up $PROPERTIES_FILE to $PROPERTIES_FILE.bak" && \
+    echosuccess "Validating keyboard layout" && \
+    validate_config && \
+    echosuccess "Generating extra keys" && \
+    gather_other_properties > "$PROPERTIES_FILE.tmp" && \
+    generate_extra_keys "$1"  >> "$PROPERTIES_FILE.tmp" && \
+    cp "$PROPERTIES_FILE.tmp" "$PROPERTIES_FILE" && \
+    rm "$PROPERTIES_FILE.tmp" && \
+    echosuccess "Successfully generated extra keys" && \
+    echosuccess "Reloading settings (please restart termux if the new keys dont show)."
+    termux-reload-settings &
+    demo
+}
+
+show_rows() {
+    echo "Layout : "
+    for row in $rows
+    do
+        echodebug " $row=${keyboard_rows[$row]} " | column
+        echodebug '-----------------------'
+    done
+}
+
+setup() {
+    show_rows
+    [ ! -d "$HOME/.termux" ] && mkdir "$HOME/.termux"
+    read -r -p "Enter default key for TMUX (CTRL b)? " tmux_key
+    tmux_key="${tmux_key:-CTRL b}"
+    generate "$tmux_key"
+}
+
+reset
+clear
+setup
+
