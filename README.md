@@ -9,12 +9,12 @@ This tool can help configure termux to run shell scripts, execute vim and termux
 ## Installation
 
 ```
-cd ~ && pkg update && pkg install -y git && git clone https://github.com/anuragntl/termux-tmux-nvim-keys && ./termux-tmux-nvim-keys/setup
+cd ~ && pkg update && pkg install -y git && git clone -b feat_keys_config https://github.com/anuragntl/termux-tmux-nvim-keys && ./termux-tmux-nvim-keys/setup
 ```
 
 ## Configuration
 
-Edit the `keyboar_layout.sh` script for configuring the keys.
+Edit the `keyboard_layout.sh` script for configuring the keys.
 
 For example:
 
