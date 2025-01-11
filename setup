@@ -108,11 +108,12 @@ gather_other_properties() {
 
 demo() {
     read -r -p "Would you like to launch tmux and vi to give these keys a try? (Y)/n " choice
+    choice="${choice:-y}"
     if [ "$choice" = "Y" ] || [ "$choice" = "y" ]
     then
         install_pkg tmux tmux "required"
         install_pkg vim vim "required"
-        tmux new-session -d -s "tmux-nvim-demo" "vi"
+        tmux new-session -d -s "tmux-nvim-demo" "vim" && \
         tmux a -t 'tmux-nvim-demo'
     fi
 }

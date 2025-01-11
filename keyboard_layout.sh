@@ -54,7 +54,7 @@ keyboard['right_and_end']=' {"key":"RIGHT","popup":"END"} '
 keyboard['tmux_next_window']=' {"macro":"TMUX_PREFIX n","display":"T>","popup":{"macro":"TMUX_PREFIX p","display":"<T"}} '
 keyboard['ctrl_n']=' {"macro":"CTRL n","display":"↓"} '
 keyboard['exit']=' {"display":"exit","macro":"exit\n"} '
-keyboard['tmux_cmd_new_window']=" {\"macro\":\"TMUX_NEW_WINDOW_COMMAND $SCRIPT_DIR/default\n\"} "
+keyboard['tmux_cmd_new_window']=" {\"display\": \"CMD\", \"macro\":\"TMUX_NEW_WINDOW_COMMAND $SCRIPT_DIR/default\n\"} "
 
 
 # All keyboard rows
