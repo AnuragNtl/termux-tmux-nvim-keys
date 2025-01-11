@@ -27,7 +27,7 @@ For example:
 ```
 keyboard['vim_write']='{"display":":w", "macro": ":w\n", "popup": {"display": ":wa", "macro": ":wa"}}'
 ```
-For reference, termux keys configuration : [Touch Keyboard](https://wiki.termux.com/wiki/Touch_Keyboard)
+_For reference, termux keys configuration : [Touch Keyboard](https://wiki.termux.com/wiki/Touch_Keyboard)._
 
 2. Then, add the key to one of the keyboard rows (keys are added left-to right)
 ```
