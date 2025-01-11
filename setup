@@ -130,7 +130,7 @@ generate() {
     cp "$PROPERTIES_FILE.tmp" "$PROPERTIES_FILE" && \
     rm "$PROPERTIES_FILE.tmp" && \
     echosuccess "Successfully generated extra keys" && \
-    echosuccess "Reloading settings"
+    echosuccess "Reloading settings (please restart termux if the new keys dont show)."
     termux-reload-settings &
     demo
 }
@@ -152,5 +152,7 @@ setup() {
     generate "$tmux_key"
 }
 
+reset
+clear
 setup
 
