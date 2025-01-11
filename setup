@@ -1,15 +1,15 @@
 #!/bin/bash
 
-export BASE_DIR="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+BASE_DIR=$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )
+export BASE_DIR
 export SCRIPT_DIR="$BASE_DIR/scripts"
 
-. $BASE_DIR/keyboard_layout.sh
-. $BASE_DIR/transformations.sh
-. $BASE_DIR/common.sh
+. "$BASE_DIR/keyboard_layout.sh"
+. "$BASE_DIR/transformations.sh"
+. "$BASE_DIR/common.sh"
 
-PROPERTIES_FILE=$HOME/termux.properties
+PROPERTIES_FILE=$HOME/.termux/termux.properties
 
-install_pkg which which "required"
 install_pkg jq jq "required"
 
 validate_config() {
@@ -24,11 +24,11 @@ validate_config() {
         for item in ${keyboard_rows[$row]}
         do
             key="${keyboard[$item]}"
-            if [ ! -z "$key" ]
+            if [ -n "$key" ]
             then
-                if ! echo "$(tr_unescape "$key")" | jq -re '""' > /dev/null
+                if ! echo "$key" | jq -re '""' > /dev/null
                 then
-                    echo "$(tr_unescape \"$key\")"
+                    echoerr "$key"
                     echoerr "Cannot create Key $item (Invalid JSON)"
                     echoerr "$key"
                     exit 1
@@ -38,12 +38,8 @@ validate_config() {
     done
 }
 
-tr_unescape() {
-    echo "$1" | sed 's/\\/\\\\/g' 
-}
-
 append_array() {
-    printf "$1" | jq ".[. | length] |= $2"
+    printf "%s" "$1" | jq ".[. | length] |= $2"
 }
 
 generate_extra_keys() {
@@ -63,26 +59,20 @@ generate_extra_keys() {
             do
                 key=$($tr "$key" "$tmux_prefix")
             done
-            if echo "$key" | jq -re '""' &> /dev/null
+            updated=$(append_array "$keys" "$key")
+            if [ -n "$updated" ]
             then
-                updated=$(append_array "$keys" "$key")
-            else
-                updated=$(append_array "$keys" "\"$key\"")
-            fi
-            if [ ! -z "$updated" ]
-            then
-                updated=$(tr_unescape "$updated")
                 keys=$updated
             fi
         done
         generated=$(append_array "$generated_rows" "$keys")
-        generated_rows=$(tr_unescape "$generated")
+        generated_rows="$generated"
     done
-    printf "extra-keys = $(printf "$generated_rows" | jq -c .)"
+    printf "extra-keys = %s\n" "$(printf "%s" "$generated_rows" | jq -c .)"
 }
 
 gather_other_properties() {
-    if [ ! -e $PROPERTIES_FILE ]
+    if [ ! -e "$PROPERTIES_FILE" ]
     then 
         return 
     fi
@@ -112,8 +102,8 @@ gather_other_properties() {
             property_started_prev_line=1
             continue
         fi
-        echo $line
-    done < $PROPERTIES_FILE
+        echo "$line"
+    done < "$PROPERTIES_FILE"
 }
 
 generate() {
@@ -124,7 +114,7 @@ generate() {
     validate_config && \
     echosuccess "Generating extra keys" && \
     gather_other_properties > "$PROPERTIES_FILE.tmp" && \
-    generate_extra_keys "$1" >> "$PROPERTIES_FILE.tmp" && \
+    generate_extra_keys "$1"  >> "$PROPERTIES_FILE.tmp" && \
     cp "$PROPERTIES_FILE.tmp" "$PROPERTIES_FILE" && \
     rm "$PROPERTIES_FILE.tmp" && \
     echosuccess "Successfully generated extra keys" && \
@@ -140,7 +130,7 @@ generate() {
         echoinfo "Would you like to launch tmux to give these keys a try?" && \
         tmux
     fi
-    read
+    read -r
 }
 
 show_rows() {
@@ -154,8 +144,8 @@ show_rows() {
 
 setup() {
     show_rows
-    [ ! -d $HOME/.termux ] && mkdir $HOME/.termux
-    read -p "Enter default key for TMUX (CTRL b)? " tmux_key
+    [ ! -d "$HOME/.termux" ] && mkdir "$HOME/.termux"
+    read -r -p "Enter default key for TMUX (CTRL b)? " tmux_key
     tmux_key="${tmux_key:-CTRL b}"
     generate "$tmux_key"
 }

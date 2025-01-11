@@ -3,6 +3,9 @@
 declare -A keyboard
 declare -A keyboard_rows
 
+export keyboard 
+export keyboard_rows
+
 ###### EDIT THIS FILE To change the extra-keys config for termux ####
 
 ### Special Keywords ###
@@ -51,7 +54,7 @@ keyboard['right_and_end']=' {"key":"RIGHT","popup":"END"} '
 keyboard['tmux_next_window']=' {"macro":"TMUX_PREFIX n","display":"T>","popup":{"macro":"TMUX_PREFIX p","display":"<T"}} '
 keyboard['ctrl_n']=' {"macro":"CTRL n","display":"↓"} '
 keyboard['exit']=' {"display":"exit","macro":"exit\n"} '
-keyboard['tmux_cmd_new_window']=" {\"macro\":\"TMUX_NEW_WINDOW_COMMAND $SCRIPT_DIR/default\"} "
+keyboard['tmux_cmd_new_window']=" {\"macro\":\"TMUX_NEW_WINDOW_COMMAND $SCRIPT_DIR/default\n\"} "
 
 
 # All keyboard rows
@@ -61,5 +64,5 @@ keyboard_rows['row3']='vim_up_and_down_split ctrl_i_and_ctrl_o ALT left_and_home
 
 
 # Register the keyboard rows, separated by space
-rows='row1 row2 row3'
+export rows='row1 row2 row3'
 
