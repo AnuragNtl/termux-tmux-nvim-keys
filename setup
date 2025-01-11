@@ -130,8 +130,8 @@ generate() {
     cp "$PROPERTIES_FILE.tmp" "$PROPERTIES_FILE" && \
     rm "$PROPERTIES_FILE.tmp" && \
     echosuccess "Successfully generated extra keys" && \
-    echosuccess "Reloading settings" && \
-    termux-reload-settings && \
+    echosuccess "Reloading settings"
+    termux-reload-settings &
     demo
 }
 
