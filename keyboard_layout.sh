@@ -35,7 +35,7 @@ keyboard['vim_left_and_right_split']=' {
         "display":"<V",
         "popup":{"macro":"CTRL w l","display":"V>"}
         } '
-keyboard['tmux_up_and_tmux_down']=' {"macro":"TMUX_PREFIX k","display":"T↑","popup":{"macro":"TMUX_PREFIX j","display":"T↓"}} '
+keyboard['tmux_up_and_tmux_down']=' {"macro":"TMUX_PREFIX UP","display":"T↑","popup":{"macro":"TMUX_PREFIX DOWN","display":"T↓"}} '
 keyboard['backslash']=' {"key":"/","popup":"BACKSLASH"} '
 keyboard['up_and_pgup']=' {"key":"UP","popup":"PGUP"} '
 keyboard['backward_in_shell']=' {"macro":"ALT b","display":"<--"} '
