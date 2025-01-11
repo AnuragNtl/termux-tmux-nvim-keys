@@ -7,7 +7,7 @@ install_pkg() {
     then
         return
     fi
-    read -r -p "$2 ($3) is not detected. would you like to install it? (Y)/n" choice
+    read -r -p "$2 ($3) is not detected. would you like to install it? (Y)/n " choice
     choice="${choice:-y}"
     if [ ! "$choice" = "y" ] && [ ! "$choice" = "Y" ]
     then
